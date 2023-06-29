@@ -30,6 +30,10 @@ class Livre
     #[ORM\OneToMany(mappedBy: 'livre', targetEntity: Emprunt::class)]
     private Collection $emprunts;
 
+    #[ORM\ManyToOne(inversedBy: 'livres')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Auteur $auteur = null;
+
     public function __construct()
     {
         $this->emprunts = new ArrayCollection();
@@ -114,6 +118,18 @@ class Livre
                 $emprunt->setLivre(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAuteur(): ?Auteur
+    {
+        return $this->auteur;
+    }
+
+    public function setAuteur(?Auteur $auteur): static
+    {
+        $this->auteur = $auteur;
 
         return $this;
     }

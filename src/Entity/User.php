@@ -36,6 +36,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private bool $enableb = true;
 
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?Emprunteur $emprunteur = null;
+
     public function getEmail(): ?string
     {
         return $this->email;
@@ -128,6 +131,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setEnabled(bool $enabled): static
     {
         $this->enabled = $enabled;
+
+        return $this;
+    }
+
+    public function getEmprunteur(): ?Emprunteur
+    {
+        return $this->emprunteur;
+    }
+
+    public function setEmprunteur(Emprunteur $emprunteur): static
+    {
+        // set the owning side of the relation if necessary
+        if ($emprunteur->getUser() !== $this) {
+            $emprunteur->setUser($this);
+        }
+
+        $this->emprunteur = $emprunteur;
 
         return $this;
     }
